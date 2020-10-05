@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace SocialMedia.DataAccess
 {
+    /// <summary>
+    /// Specialized version of <see cref="RepositoryBase{T}"/> for <see cref="AspNetPosts"/> 
+    /// to include <see cref="AspNetPosts.FkUser"/>
+    /// </summary>
     public class PostRepository : RepositoryBase<AspNetPosts>
     {
         /// <summary>
