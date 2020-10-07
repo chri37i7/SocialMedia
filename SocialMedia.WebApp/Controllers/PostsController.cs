@@ -84,6 +84,11 @@ namespace SocialMedia.WebApp.Controllers
                 return NotFound();
             }
 
+            if(aspNetPosts.FkUserId != User.FindFirstValue(ClaimTypes.NameIdentifier))
+            {
+                return NotFound();
+            }
+
             return View(aspNetPosts);
         }
 
