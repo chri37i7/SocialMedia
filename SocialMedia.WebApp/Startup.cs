@@ -12,6 +12,7 @@ using SocialMedia.WebApp.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SocialMedia.Entities.Models.Context;
 
 namespace SocialMedia.WebApp
 {
@@ -34,6 +35,17 @@ namespace SocialMedia.WebApp
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddScoped<SocialMediaContext>();
+
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    IConfigurationSection googleAuthNSection = Configuration.GetSection("Authentication:Google");
+
+                    options.ClientId = "340511645090-68gsf9ugquf6eub98656nnp5jf3fm56b.apps.googleusercontent.com";
+                    options.ClientSecret = "u8bA-HjY5QJsZEtOyGQNHOyc";
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
