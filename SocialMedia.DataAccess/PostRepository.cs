@@ -2,6 +2,7 @@
 
 using SocialMedia.DataAccess.Base;
 using SocialMedia.Entities.Models;
+using SocialMedia.Entities.Models.Context;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace SocialMedia.DataAccess
     /// Specialized version of <see cref="RepositoryBase{T}"/> for <see cref="AspNetPosts"/> 
     /// to include <see cref="AspNetPosts.FkUser"/>
     /// </summary>
-    public class PostRepository : RepositoryBase<AspNetPosts>
+    public class PostRepository : RepositoryBase<AspNetPosts, SocialMediaContext>
     {
         /// <summary>
         /// Gets an item by ID

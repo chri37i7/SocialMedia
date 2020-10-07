@@ -8,15 +8,15 @@ namespace SocialMedia.DataAccess.Base
     /// Base repository interface
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IRepositoryBase<T>
+    public interface IRepositoryBase<TModel, TContext>
     {
-        SocialMediaContext Context { get; set; }
+        TContext Context { get; set; }
 
-        Task AddAsync(T t);
-        Task<T> GetByIdAsync(int? id);
-        Task<IEnumerable<T>> GetAllAsync();
-        Task UpdateAsync(T t);
-        Task DeleteAsync(T t);
+        Task AddAsync(TModel t);
+        Task<TModel> GetByIdAsync(int? id);
+        Task<IEnumerable<TModel>> GetAllAsync();
+        Task UpdateAsync(TModel t);
+        Task DeleteAsync(TModel t);
         Task<bool> Exists(int? id);
     }
 }

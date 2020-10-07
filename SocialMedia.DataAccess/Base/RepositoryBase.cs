@@ -1,26 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SocialMedia.Entities.Models.Context;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SocialMedia.DataAccess.Base
 {
     /// <summary>
-    /// Base generic repository class for encapsulation of DBContext functionalities
+    /// Generic repository class for encapsulation of DbContext funtionality
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class RepositoryBase<T> : IRepositoryBase<T> where T : class
+    public class RepositoryBase<TModel, TContext> : IRepositoryBase<TModel, TContext>
+        where TModel : class
+        where TContext : DbContext, new()
     {
-        /// <summary>
-        /// Database context
-        /// </summary>
-        protected SocialMediaContext context;
+        #region Fields
+        protected TContext context;
+        #endregion
 
+        #region Constructors
         /// <summary>
-        /// Sets the context to the provided parameter item
+        /// Initializes the context with the provided object
         /// </summary>
         /// <param name="context"></param>
-        public RepositoryBase(SocialMediaContext context)
+        public RepositoryBase(TContext context)
         {
             Context = context;
         }
@@ -30,77 +31,83 @@ namespace SocialMedia.DataAccess.Base
         /// </summary>
         public RepositoryBase()
         {
-            context = new SocialMediaContext();
+            context = new TContext();
         }
+        #endregion
 
+        #region Properties
         /// <summary>
-        /// The database context
+        /// Database Context
         /// </summary>
-        public virtual SocialMediaContext Context
+        public virtual TContext Context
         {
             get { return context; }
             set { context = value; }
         }
+        #endregion
 
+        #region Methods
         /// <summary>
-        /// Adds an item
+        /// Adds the provided object to the context,
+        /// and saves the changes.
         /// </summary>
         /// <param name="t"></param>
-        /// <returns></returns>
-        public virtual async Task AddAsync(T t)
+        public virtual async Task AddAsync(TModel t)
         {
-            context.Set<T>().Add(t);
+            context.Set<TModel>().Add(t);
             await context.SaveChangesAsync();
         }
 
         /// <summary>
-        /// Gets an item by ID
+        /// Gets an object with the provided id,
+        /// returns null if nothing is found.
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
-        public virtual async Task<T> GetByIdAsync(int? id)
+        public virtual async Task<TModel> GetByIdAsync(int? id)
         {
-            return await context.Set<T>().FindAsync(id);
+            return await context.Set<TModel>().FindAsync(id);
         }
 
         /// <summary>
-        /// Gets all the items
+        /// Gets all the objects from the context.
         /// </summary>
-        /// <returns></returns>
-        public virtual async Task<IEnumerable<T>> GetAllAsync()
+        public virtual async Task<IEnumerable<TModel>> GetAllAsync()
         {
-            return await context.Set<T>().ToListAsync();
+            return await context.Set<TModel>().ToListAsync();
         }
 
         /// <summary>
-        /// Updates an item
+        /// Updates the provided object in the context,
+        /// and saves the changes.
         /// </summary>
         /// <returns></returns>
-        public virtual async Task UpdateAsync(T t)
+        public virtual async Task UpdateAsync(TModel t)
         {
-            context.Set<T>().Update(t);
+            context.Set<TModel>().Update(t);
             await context.SaveChangesAsync();
         }
 
         /// <summary>
-        /// Deletes an item
+        /// Deletes the provided object in the context,
+        /// and saves the changes.
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        public virtual async Task DeleteAsync(T t)
+        public virtual async Task DeleteAsync(TModel t)
         {
-            context.Set<T>().Remove(t);
+            context.Set<TModel>().Remove(t);
             await context.SaveChangesAsync();
         }
 
         /// <summary>
-        /// Checks if an item exists
+        /// Checks if an object with the provided id exists.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public virtual async Task<bool> Exists(int? id)
         {
-            return await context.Set<T>().FindAsync(id) != null;
-        }
+            return await context.Set<TModel>().FindAsync(id) != null;
+        } 
+        #endregion
     }
 }
