@@ -13,9 +13,10 @@ namespace SocialMedia.DataAccess.Base
         SocialMediaContext Context { get; set; }
 
         Task AddAsync(T t);
-        Task<T> GetByIdAsync(int id);
+        Task<T> GetByIdAsync(int? id);
         Task<IEnumerable<T>> GetAllAsync();
-        Task UpdateAsync();
+        Task UpdateAsync(T t);
         Task DeleteAsync(T t);
+        Task<bool> Exists(int? id);
     }
 }

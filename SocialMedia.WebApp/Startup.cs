@@ -1,18 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
-using SocialMedia.WebApp.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SocialMedia.Entities.Models.Context;
+using SocialMedia.DataAccess;
+using SocialMedia.WebApp.Data;
 
 namespace SocialMedia.WebApp
 {
@@ -36,7 +30,7 @@ namespace SocialMedia.WebApp
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            services.AddScoped<SocialMediaContext>();
+            services.AddScoped<PostRepository>();
 
             services.AddAuthentication()
                 .AddGoogle(options =>

@@ -58,7 +58,7 @@ namespace SocialMedia.DataAccess.Base
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public virtual async Task<T> GetByIdAsync(int id)
+        public virtual async Task<T> GetByIdAsync(int? id)
         {
             return await context.Set<T>().FindAsync(id);
         }
@@ -76,8 +76,9 @@ namespace SocialMedia.DataAccess.Base
         /// Updates an item
         /// </summary>
         /// <returns></returns>
-        public virtual async Task UpdateAsync()
+        public virtual async Task UpdateAsync(T t)
         {
+            context.Set<T>().Update(t);
             await context.SaveChangesAsync();
         }
 
@@ -90,6 +91,16 @@ namespace SocialMedia.DataAccess.Base
         {
             context.Set<T>().Remove(t);
             await context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Checks if an item exists
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<bool> Exists(int? id)
+        {
+            return await context.Set<T>().FindAsync(id) != null;
         }
     }
 }

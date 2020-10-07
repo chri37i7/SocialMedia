@@ -19,7 +19,7 @@ namespace SocialMedia.DataAccess
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public override async Task<AspNetPosts> GetByIdAsync(int id)
+        public override async Task<AspNetPosts> GetByIdAsync(int? id)
         {
             return await context.Set<AspNetPosts>().Include(p => p.FkUser).FirstOrDefaultAsync(p => p.PkId == id);
         }

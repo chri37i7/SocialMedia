@@ -1,43 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SocialMedia.DataAccess;
 using SocialMedia.Entities.Models;
-using SocialMedia.Entities.Models.Context;
 
 namespace SocialMedia.WebApp.Controllers
 {
     public class PostsController : Controller
     {
-        private readonly SocialMediaContext _context;
+        private readonly PostRepository repo;
 
-        public PostsController(SocialMediaContext context)
+        public PostsController(PostRepository postRepository)
         {
-            _context = context;
+            repo = postRepository;
         }
 
         // GET: AspNetPosts
         public async Task<IActionResult> Index()
         {
-            var socialMediaContext = _context.AspNetPosts.Include(a => a.FkUser);
-            return View(await socialMediaContext.ToListAsync());
+            IEnumerable<AspNetPosts> socialMediaContext = await repo.GetAllAsync();
+            return View(socialMediaContext);
         }
 
         // GET: AspNetPosts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            if(id == null)
             {
                 return NotFound();
             }
 
-            var aspNetPosts = await _context.AspNetPosts
-                .Include(a => a.FkUser)
-                .FirstOrDefaultAsync(m => m.PkId == id);
-            if (aspNetPosts == null)
+            AspNetPosts aspNetPosts = await repo.GetByIdAsync(id);
+
+            if(aspNetPosts == null)
             {
                 return NotFound();
             }
@@ -48,7 +46,6 @@ namespace SocialMedia.WebApp.Controllers
         // GET: AspNetPosts/Create
         public IActionResult Create()
         {
-            ViewData["FkUserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             return View();
         }
 
@@ -59,30 +56,34 @@ namespace SocialMedia.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PkId,Title,Description,Image,IsEdited,Created,Updated,FkUserId")] AspNetPosts aspNetPosts)
         {
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
-                _context.Add(aspNetPosts);
-                await _context.SaveChangesAsync();
+                aspNetPosts.Created = DateTime.Now;
+                aspNetPosts.FkUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                await repo.AddAsync(aspNetPosts);
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FkUserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", aspNetPosts.FkUserId);
-            return View(aspNetPosts);
+
+            return View();
         }
 
         // GET: AspNetPosts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            if(id == null)
             {
                 return NotFound();
             }
 
-            var aspNetPosts = await _context.AspNetPosts.FindAsync(id);
-            if (aspNetPosts == null)
+            AspNetPosts aspNetPosts = await repo.GetByIdAsync(id);
+
+            if(aspNetPosts == null)
             {
                 return NotFound();
             }
-            ViewData["FkUserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", aspNetPosts.FkUserId);
+
             return View(aspNetPosts);
         }
 
@@ -93,21 +94,29 @@ namespace SocialMedia.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("PkId,Title,Description,Image,IsEdited,Created,Updated,FkUserId")] AspNetPosts aspNetPosts)
         {
-            if (id != aspNetPosts.PkId)
+            if(id != aspNetPosts.PkId)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(aspNetPosts);
-                    await _context.SaveChangesAsync();
+                    AspNetPosts originalPost = await repo.GetByIdAsync(id);
+
+                    originalPost.IsEdited = true;
+                    originalPost.Updated = DateTime.Now;
+
+                    originalPost.Title = aspNetPosts.Title;
+                    originalPost.Description = aspNetPosts.Description;
+                    originalPost.Image = aspNetPosts.Image;
+
+                    await repo.UpdateAsync(originalPost);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch(DbUpdateConcurrencyException)
                 {
-                    if (!AspNetPostsExists(aspNetPosts.PkId))
+                    if(!await AspNetPostsExists(aspNetPosts.PkId))
                     {
                         return NotFound();
                     }
@@ -118,22 +127,21 @@ namespace SocialMedia.WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FkUserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", aspNetPosts.FkUserId);
-            return View(aspNetPosts);
+
+            return View();
         }
 
         // GET: AspNetPosts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            if(id == null)
             {
                 return NotFound();
             }
 
-            var aspNetPosts = await _context.AspNetPosts
-                .Include(a => a.FkUser)
-                .FirstOrDefaultAsync(m => m.PkId == id);
-            if (aspNetPosts == null)
+            AspNetPosts aspNetPosts = await repo.GetByIdAsync(id);
+
+            if(aspNetPosts == null)
             {
                 return NotFound();
             }
@@ -146,15 +154,16 @@ namespace SocialMedia.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var aspNetPosts = await _context.AspNetPosts.FindAsync(id);
-            _context.AspNetPosts.Remove(aspNetPosts);
-            await _context.SaveChangesAsync();
+            AspNetPosts aspNetPosts = await repo.GetByIdAsync(id);
+
+            await repo.DeleteAsync(aspNetPosts);
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AspNetPostsExists(int id)
+        private async Task<bool> AspNetPostsExists(int id)
         {
-            return _context.AspNetPosts.Any(e => e.PkId == id);
+            return await repo.Exists(id);
         }
     }
 }
