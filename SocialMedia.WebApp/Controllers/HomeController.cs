@@ -19,8 +19,6 @@ namespace SocialMedia.WebApp.Controllers
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-
-            UserManager<IdentityUser> manager;
         }
 
         public IActionResult Index()
