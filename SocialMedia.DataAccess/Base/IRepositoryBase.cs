@@ -1,22 +1,20 @@
-﻿using SocialMedia.Entities.Models.Context;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SocialMedia.DataAccess.Base
 {
     /// <summary>
-    /// Base repository interface
+    /// Generic interface specifying encapsulation of DbContext funtionality
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface IRepositoryBase<TModel, TContext>
+    /// <typeparam name="TModel"></typeparam>
+    /// <typeparam name="TContext"></typeparam>
+    public interface IRepositoryBase<TModel>
     {
-        TContext Context { get; set; }
-
         Task AddAsync(TModel t);
         Task<TModel> GetByIdAsync(int? id);
         Task<IEnumerable<TModel>> GetAllAsync();
         Task UpdateAsync(TModel t);
         Task DeleteAsync(TModel t);
-        Task<bool> Exists(int? id);
+        Task<bool> ExistsAsync(int? id);
     }
 }

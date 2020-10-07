@@ -163,7 +163,7 @@ namespace SocialMedia.WebApp.Controllers
 
         private async Task<bool> AspNetPostsExists(int id)
         {
-            return await repo.Exists(id);
+            return await repo.ExistsAsync(id);
         }
     }
 }

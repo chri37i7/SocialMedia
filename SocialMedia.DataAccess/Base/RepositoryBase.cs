@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 namespace SocialMedia.DataAccess.Base
 {
     /// <summary>
-    /// Generic repository class for encapsulation of DbContext funtionality
+    /// Concreate implementation of <see cref="IRepositoryBase{TModel, TContext}"/>
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class RepositoryBase<TModel, TContext> : IRepositoryBase<TModel, TContext>
+    /// <typeparam name="TModel"></typeparam>
+    /// <typeparam name="TContext"></typeparam>
+    public class RepositoryBase<TModel, TContext> : IRepositoryBase<TModel>
         where TModel : class
         where TContext : DbContext, new()
     {
@@ -23,7 +24,7 @@ namespace SocialMedia.DataAccess.Base
         /// <param name="context"></param>
         public RepositoryBase(TContext context)
         {
-            Context = context;
+            this.context = context;
         }
 
         /// <summary>
@@ -32,17 +33,6 @@ namespace SocialMedia.DataAccess.Base
         public RepositoryBase()
         {
             context = new TContext();
-        }
-        #endregion
-
-        #region Properties
-        /// <summary>
-        /// Database Context
-        /// </summary>
-        public virtual TContext Context
-        {
-            get { return context; }
-            set { context = value; }
         }
         #endregion
 
@@ -104,7 +94,7 @@ namespace SocialMedia.DataAccess.Base
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public virtual async Task<bool> Exists(int? id)
+        public virtual async Task<bool> ExistsAsync(int? id)
         {
             return await context.Set<TModel>().FindAsync(id) != null;
         } 
