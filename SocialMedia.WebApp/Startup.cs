@@ -35,10 +35,12 @@ namespace SocialMedia.WebApp
             services.AddAuthentication()
                 .AddGoogle(options =>
                 {
-                    IConfigurationSection googleAuthNSection = Configuration.GetSection("Authentication:Google");
-
-                    options.ClientId = "340511645090-68gsf9ugquf6eub98656nnp5jf3fm56b.apps.googleusercontent.com";
-                    options.ClientSecret = "u8bA-HjY5QJsZEtOyGQNHOyc";
+                    options.ClientId = Configuration["Authentication:Google:ClientId"];
+                    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                }).AddMicrosoftAccount(options =>
+                {
+                    options.ClientId = Configuration["Authentication:Microsoft:ClientId"];
+                    options.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
                 });
         }
 
