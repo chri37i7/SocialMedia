@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SocialMedia.DataAccess;
 using SocialMedia.WebApp.Data;
+using SocialMedia.DataAccess.Base;
+using SocialMedia.Entities.Models;
 
 namespace SocialMedia.WebApp
 {
@@ -30,7 +32,7 @@ namespace SocialMedia.WebApp
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            services.AddScoped<PostRepository>();
+            services.AddScoped(typeof(IRepositoryBase<AspNetPosts>), typeof(PostRepository));
 
             services.AddAuthentication()
                 .AddGoogle(options =>

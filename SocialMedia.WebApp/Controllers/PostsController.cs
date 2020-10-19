@@ -4,16 +4,16 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SocialMedia.DataAccess;
+using SocialMedia.DataAccess.Base;
 using SocialMedia.Entities.Models;
 
 namespace SocialMedia.WebApp.Controllers
 {
     public class PostsController : Controller
     {
-        private readonly PostRepository repo;
+        private readonly IRepositoryBase<AspNetPosts> repo;
 
-        public PostsController(PostRepository postRepository)
+        public PostsController(IRepositoryBase<AspNetPosts> postRepository)
         {
             repo = postRepository;
         }
