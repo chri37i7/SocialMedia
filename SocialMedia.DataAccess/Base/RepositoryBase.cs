@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,12 +11,11 @@ namespace SocialMedia.DataAccess.Base
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
     /// <typeparam name="TContext"></typeparam>
-    public class RepositoryBase<TModel, TContext> : IRepositoryBase<TModel>
+    public class RepositoryBase<TModel> : IRepositoryBase<TModel>
         where TModel : class
-        where TContext : DbContext, new()
     {
         #region Fields
-        protected TContext context;
+        protected DbContext context;
         #endregion
 
         #region Constructors
@@ -22,17 +23,9 @@ namespace SocialMedia.DataAccess.Base
         /// Initializes the context with the provided object
         /// </summary>
         /// <param name="context"></param>
-        public RepositoryBase(TContext context)
+        public RepositoryBase(DbContext context)
         {
             this.context = context;
-        }
-
-        /// <summary>
-        /// Initializes the context
-        /// </summary>
-        public RepositoryBase()
-        {
-            context = new TContext();
         }
         #endregion
 

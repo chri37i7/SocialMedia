@@ -9,6 +9,7 @@ using SocialMedia.DataAccess;
 using SocialMedia.WebApp.Data;
 using SocialMedia.DataAccess.Base;
 using SocialMedia.Entities.Models;
+using SocialMedia.Entities.Models.Context;
 
 namespace SocialMedia.WebApp
 {
@@ -32,7 +33,8 @@ namespace SocialMedia.WebApp
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            services.AddScoped(typeof(IRepositoryBase<AspNetPosts>), typeof(PostRepository));
+            services.AddScoped<IRepositoryBase<AspNetPosts>, PostRepository>();
+            services.AddScoped<DbContext, SocialMediaContext>();
 
             services.AddAuthentication()
                 .AddGoogle(options =>
