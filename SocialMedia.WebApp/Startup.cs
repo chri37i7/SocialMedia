@@ -10,6 +10,9 @@ using SocialMedia.WebApp.Data;
 using SocialMedia.DataAccess.Base;
 using SocialMedia.Entities.Models;
 using SocialMedia.Entities.Models.Context;
+using Autofac;
+using System;
+using Autofac.Extensions.DependencyInjection;
 
 namespace SocialMedia.WebApp
 {
@@ -23,7 +26,7 @@ namespace SocialMedia.WebApp
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
@@ -39,9 +42,6 @@ namespace SocialMedia.WebApp
                 options.UseSqlServer(
                     Configuration.GetConnectionString("SocialMediaConnection")));
 
-            services.AddScoped<IRepositoryBase<AspNetPosts>, PostRepository>();
-            services.AddScoped<DbContext, SocialMediaContext>();
-
             services.AddAuthentication()
                 .AddGoogle(options =>
                 {
@@ -52,7 +52,19 @@ namespace SocialMedia.WebApp
                     options.ClientId = Configuration["Authentication:Microsoft:ClientId"];
                     options.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
                 });
+
+            ContainerBuilder builder = new ContainerBuilder();
+
+            builder.RegisterType<PostRepository>().As<IRepositoryBase<AspNetPosts>>();
+            builder.RegisterType<SocialMediaContext>().As<DbContext>();
+            builder.Populate(services);
+
+            IContainer container = builder.Build();
+
+            return new AutofacServiceProvider(container);
         }
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
