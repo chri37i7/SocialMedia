@@ -1,16 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SocialMedia.DataAccess.Base
 {
     /// <summary>
-    /// Concreate implementation of <see cref="IRepositoryBase{TModel, TContext}"/>
+    /// Generic repository base class.
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    /// <typeparam name="TContext"></typeparam>
     public class RepositoryBase<TModel> : IRepositoryBase<TModel>
         where TModel : class
     {

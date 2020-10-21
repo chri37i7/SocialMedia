@@ -1,16 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
 using SocialMedia.DataAccess.Base;
 using SocialMedia.Entities.Models;
-using SocialMedia.Entities.Models.Context;
-
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SocialMedia.DataAccess
 {
     /// <summary>
-    /// Specialization of <see cref="RepositoryBase{TModel, TContext}"/> for inclusion of <see cref="AspNetPosts.FkUser"/>
+    /// Specialization of <see cref="RepositoryBase{TModel}"/> for inclusion of <see cref="AspNetPosts.FkUser"/>
     /// </summary>
     public class PostRepository : RepositoryBase<AspNetPosts>
     {
