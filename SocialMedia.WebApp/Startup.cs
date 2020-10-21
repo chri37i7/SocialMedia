@@ -55,8 +55,7 @@ namespace SocialMedia.WebApp
 
             ContainerBuilder builder = new ContainerBuilder();
 
-            builder.RegisterType<PostRepository>().As<IRepositoryBase<AspNetPosts>>();
-            builder.RegisterType<SocialMediaContext>().As<DbContext>();
+            builder.RegisterModule<ServiceModules>();
             builder.Populate(services);
 
             IContainer container = builder.Build();
