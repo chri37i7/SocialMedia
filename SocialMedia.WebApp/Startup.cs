@@ -5,10 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SocialMedia.DataAccess;
 using SocialMedia.WebApp.Data;
-using SocialMedia.DataAccess.Base;
-using SocialMedia.Entities.Models;
 using SocialMedia.Entities.Models.Context;
 using Autofac;
 using System;
@@ -62,8 +59,6 @@ namespace SocialMedia.WebApp
 
             return new AutofacServiceProvider(container);
         }
-
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
