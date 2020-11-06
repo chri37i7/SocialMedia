@@ -1,11 +1,12 @@
 {
   "dependencies": {
-    "mssql1": {
+    "mssql2": {
       "type": "mssql",
-      "connectionId": "DefaultConnection"
+      "connectionId": "SocialMediaConnection"
     },
     "secrets1": {
-      "type": "secrets"
+      "type": "secrets",
+      "connectionId": "VaultUri"
     }
   }
 }

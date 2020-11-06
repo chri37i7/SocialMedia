@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SocialMedia.Containers\SocialMedia.Containers.csproj" />
+    <ProjectReference Include="..\SocialMedia.DataAccess\SocialMedia.DataAccess.csproj" />
+  </ItemGroup>
+
+</Project>

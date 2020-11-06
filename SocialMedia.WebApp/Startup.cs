@@ -26,8 +26,7 @@ namespace SocialMedia.WebApp
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("SocialMediaConnection")));
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -36,19 +35,18 @@ namespace SocialMedia.WebApp
             services.AddRazorPages();
 
             services.AddDbContext<SocialMediaContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("SocialMediaConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("SocialMediaConnection")));
 
-            services.AddAuthentication()
-                .AddGoogle(options =>
-                {
-                    options.ClientId = Configuration["Authentication:Google:ClientId"];
-                    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-                }).AddMicrosoftAccount(options =>
-                {
-                    options.ClientId = Configuration["Authentication:Microsoft:ClientId"];
-                    options.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
-                });
+            //services.AddAuthentication()
+            //    .AddGoogle(options =>
+            //    {
+            //        options.ClientId = Environment.GetEnvironmentVariable("Authentication:Google:ClientId");
+            //        options.ClientSecret = Environment.GetEnvironmentVariable("Authentication:Google:ClientSecret");
+            //    }).AddMicrosoftAccount(options =>
+            //    {
+            //        options.ClientId = Environment.GetEnvironmentVariable("Authentication:Microsoft:ClientId");
+            //        options.ClientSecret = Environment.GetEnvironmentVariable("Authentication:Microsoft:ClientSecret");
+            //    });
 
             ContainerBuilder builder = new ContainerBuilder();
 

@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Azure.Identity;
+using Microsoft.Extensions.Configuration;
+using System;
 
 namespace SocialMedia.WebApp
 {
@@ -14,6 +17,13 @@ namespace SocialMedia.WebApp
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    Uri keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri"));
+                    config.AddAzureKeyVault(
+                    keyVaultEndpoint,
+                    new DefaultAzureCredential());
+                })
                 .ConfigureWebHostDefaults(webBuilder => 
                 { 
                     webBuilder.UseStartup<Startup>(); 
